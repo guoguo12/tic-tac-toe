@@ -2,8 +2,6 @@ open Core.Std;;
 
 let index_of_coord x y = 3 * y + x
 
-let coord_of_index i = (i mod 3, i / 3)
-
 let get_row board y =
   List.map (List.range 0 3)
            (fun x -> board.(index_of_coord x y))
@@ -59,12 +57,12 @@ let get_score board =
   | x :: _ -> x / 3
 
 let board_full board =
-  let open_positions =
+  let number_of_open_positions =
     List.filter all_positions
                 (fun (x, y) -> board.(index_of_coord x y) = 0)
+    |> List.length
   in
-  List.length open_positions = 0
-
+  number_of_open_positions = 0
 
 let show_board board player_starts =
   let mark_of_int = function
@@ -73,13 +71,10 @@ let show_board board player_starts =
     | _ -> "   "
   in
   let print_row y =
-    let marks = List.map ~f:mark_of_int (get_row board y)
-    in
+    let marks = List.map ~f:mark_of_int (get_row board y) in
     Printf.printf "%d %s\n" y (String.concat marks ~sep:"|")
   in
-  let print_divider () =
-    Printf.printf "  -----------\n"
-  in
+  let print_divider () = Printf.printf "  -----------\n" in
   Printf.printf "\n=============================\n\n";
   print_row 2;
   print_divider ();
