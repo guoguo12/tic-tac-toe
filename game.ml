@@ -23,9 +23,33 @@ let rec prompt_for_move ?(show_hint=true) board =
   ) else (x, y)
 
 let ai_move board =
-  let random_from_array items = items.(Random.int (Array.length items)) in
-  let successors = get_successors board (-1) in
-  let (x, y, _) = random_from_array successors in (x, y)
+  let third (_, _, x) = x in
+  let min_on_third t1 t2 = if third t2 < third t1 then t2 else t1 in
+  let rec min_value depth board =
+    let successors = get_successors board (-1) in
+    if get_score board <> 0 then
+      (get_score board) * depth
+    else if Array.length successors = 0 then
+      0
+    else
+      Array.map third successors
+      |> Array.map ~f:(max_value (depth + 1))
+      |> Array.fold ~init:Int.max_value ~f:min
+  and max_value depth board =
+    let successors = get_successors board 1 in
+    if get_score board <> 0 then
+      (get_score board) * depth
+    else if Array.length successors = 0 then
+      0
+    else
+      Array.map third successors
+      |> Array.map ~f:(min_value depth)
+      |> Array.fold ~init:Int.min_value ~f:max
+  in
+  get_successors board (-1)
+  |> Array.map ~f:(fun (x, y, new_board) -> (x, y, max_value 1 new_board))
+  |> Array.fold ~init:(-1, -1, Int.max_value) ~f:min_on_third
+  |> (fun (x, y, _) -> (x, y))
 
 let new_game_state ~player_starts =
   let board = Array.create 9 0 in (player_starts, board, player_starts)
