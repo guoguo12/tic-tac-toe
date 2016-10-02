@@ -1,8 +1,10 @@
 (** Tic-Tac-Toe in OCaml
-    By Allen Guo  *)
+    By Allen Guo *)
 
 open Core.Std;;
 
+(** Ask user for coordinates of next move, repeating the prompt until the
+    response is a valid location. *)
 let rec prompt_for_move ?(show_hint=true) board =
   let rec prompt_for_coord name =
     Printf.printf "%s: " name;
@@ -15,15 +17,17 @@ let rec prompt_for_move ?(show_hint=true) board =
   Printf.printf (if show_hint then "It is now your turn.\n" else "");
   let x = prompt_for_coord "x" in
   let y = prompt_for_coord "y" in
-  let index = Board.index_of_coord x y in
-  if board.(index) <> 0 then (
-    Printf.printf "Position (%d, %d) is already occupied. Try again.\n" x y;
+  if Board.get_item board x y <> 0 then (
+    Printf.printf "Position (%d, %d) is occupied. Try again.\n" x y;
     prompt_for_move board ~show_hint:false
   ) else (x, y)
 
+(** Returns the coordinates of an optimal move for the given board.
+    Uses the minimax algorithm. *)
 let ai_move board =
   let third (_, _, x) = x in
   let min_on_third t1 t2 = if third t2 < third t1 then t2 else t1 in
+  (* Computes the minimax value of a min-node *)
   let rec min_value depth board =
     let successors = Board.get_successors board (-1) in
     if Board.get_score board <> 0 then
@@ -34,6 +38,7 @@ let ai_move board =
       Array.map third successors
       |> Array.map ~f:(max_value (depth + 1))
       |> Array.fold ~init:Int.max_value ~f:min
+  (* Computes the minimax value of a max-node *)
   and max_value depth board =
     let successors = Board.get_successors board 1 in
     if Board.get_score board <> 0 then
@@ -45,15 +50,19 @@ let ai_move board =
       |> Array.map ~f:(min_value depth)
       |> Array.fold ~init:Int.min_value ~f:max
   in
+  (* Pick an optimal action *)
   Board.get_successors board (-1)
   |> Array.map ~f:(fun (x, y, new_board) -> (x, y, max_value 1 new_board))
   |> Array.fold ~init:(-1, -1, Int.max_value) ~f:min_on_third
   |> (fun (x, y, _) -> (x, y))
 
+(** Returns a new game state. *)
 let new_game_state ~player_starts =
-  let board = Array.create 9 0 in (player_starts, board, player_starts)
+  let board = Board.new_board () in (player_starts, board, player_starts)
 
+(** This is the main game loop. *)
 let rec run_game (player_turn, board, player_starts) =
+  (* Display board *)
   Board.show_board board player_starts;
   (* Check if someone won *)
   let score = Board.get_score board in
@@ -69,17 +78,19 @@ let rec run_game (player_turn, board, player_starts) =
       if player_turn then (
         let (x, y) = prompt_for_move board in
         Printf.printf "You mark (%d, %d).\n" x y;
-        board.(Board.index_of_coord x y) <- 1;
+        Board.set_item board x y 1;
       ) else (
         let (x, y) = ai_move board in
         Printf.printf "The computer marks (%d, %d).\n" x y;
-        board.(Board.index_of_coord x y) <- -1;
+        Board.set_item board x y (-1);
       );
+      (* Recurse, but switch whose turn it is *)
       run_game (not player_turn, board, player_starts)
     )
   )
 
-let start_game =
+(** This starts the game. *)
+let _ =
   let player_starts =
     Random.self_init ();
     Random.bool ()
@@ -88,5 +99,3 @@ let start_game =
   let player_mark = if player_starts then "X" else "O" in
   Printf.printf "You are %s. X goes first.\n" player_mark;
   run_game state;;
-
-start_game;;
