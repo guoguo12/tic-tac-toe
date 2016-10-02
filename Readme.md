@@ -11,7 +11,7 @@ so that the agent will try to prolong the game as much as possible.
 
 ## Demo video
 
-[![asciicast](https://asciinema.org/a/66kab6u0c86auob5duyu5emif.png)](https://asciinema.org/a/66kab6u0c86auob5duyu5emif)
+[![asciicast](https://asciinema.org/a/d4t2xa927oumd9pr9kfwggrhn.png)](https://asciinema.org/a/d4t2xa927oumd9pr9kfwggrhn)
 
 ## Instructions
 
