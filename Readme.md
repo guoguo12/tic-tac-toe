@@ -9,6 +9,10 @@ This is achieved by scaling the win/loss value of a leaf node (+1 or -1) by the 
 so that the agent will try to prolong the game as much as possible.
 (See the "Fighting the Good Fight: Depth" section in [this article](http://neverstopbuilding.com/minimax).)
 
+## Demo video
+
+[![asciicast](https://asciinema.org/a/66kab6u0c86auob5duyu5emif.png)](https://asciinema.org/a/66kab6u0c86auob5duyu5emif)
+
 ## Instructions
 
 Clone this repo, run `make` to compile, then run `./game.native` to play.
