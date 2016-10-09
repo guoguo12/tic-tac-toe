@@ -1,7 +1,7 @@
 (** Tic-Tac-Toe in OCaml
     By Allen Guo *)
 
-open Core.Std;;
+open Core.Std
 
 (** Ask user for coordinates of next move, repeating the prompt until the
     response is a valid location. *)
@@ -98,4 +98,4 @@ let _ =
   let state = new_game_state ~player_starts in
   let player_mark = if player_starts then "X" else "O" in
   Printf.printf "You are %s. X goes first.\n" player_mark;
-  run_game state;;
+  run_game state
