@@ -1,5 +1,7 @@
 default:
-	ocamlbuild -r -use-ocamlfind -pkg 'core' -tag thread game.native *.ml
+	jbuilder build game.exe
+	rm -f game.native && ln -s _build/default/game.exe game.native
+	chmod +x game.native
 
 clean:
-	rm -rf *.cmi *.cmo _build
+	rm -rf _build game.native

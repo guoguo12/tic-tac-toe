@@ -17,8 +17,6 @@ so that the agent will try to prolong the game as much as possible.
 
 Clone this repo, run `make` to compile, then run `./game.native` to play.
 
-You'll need to have [OCaml](https://ocaml.org/docs/install.html) installed, by the way.
-
 ## Dependencies
 
-This project requires [Jane Street Core](https://github.com/janestreet/core).
+This project requires [Core](https://github.com/janestreet/core) and [Jbuilder](https://github.com/janestreet/jbuilder).
