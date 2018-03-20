@@ -19,4 +19,4 @@ Clone this repo, run `make` to compile, then run `./game.native` to play.
 
 ## Dependencies
 
-This project requires [Core](https://github.com/janestreet/core) and [Jbuilder](https://github.com/janestreet/jbuilder).
+This project requires [Core](https://github.com/janestreet/core) and [Dune](https://github.com/janestreet/dune).
